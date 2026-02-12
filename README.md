@@ -11,7 +11,7 @@ This repository presents a complete end-to-end single-cell RNA sequencing (scRNA
 4. Compare Diabetic Kidney Disease (DKD) vs Healthy controls
 5. Determine molecular pathways that drive the disease
 
-## PART 1: DATA & DEPENDENCIES - COMPLETE REQUIREMENTS
+## DATA & DEPENDENCIES - COMPLETE REQUIREMENTS
 ### DATASET: GSE183276 - Diabetic Kidney Disease scRNA-seq :- GEO Accession Page
  wget https://ftp.ncbi.nlm.nih.gov/geo/series/GSE183nnn/GSE183276/suppl/GSE183276_Kidney_Healthy-Injury_Cell_Atlas_scCv3_Counts_03282022.RDS.gz
  https://ftp.ncbi.nlm.nih.gov/geo/series/GSE183nnn/GSE183276/suppl/GSE183276_Kidney_Healthy-Injury_Cell_Atlas_scCv3_Counts_03282022.RDS.gz
@@ -54,3 +54,31 @@ BiocManager::install(c("batchelor", "zellkonverter", "SingleCellExperiment"))
 | `zellkonverter`        | Read/write between `SingleCellExperiment` and `.h5ad` (Scanpy) formats.                                                        |
 | `SingleCellExperiment` | Core S4 class for single-cell data in R (used by `batchelor` and other Bioconductor packages).                                 |
 
+## QUALITY CONTROL THRESHOLDS
+Minimum genes per cell	(nFeature_RNA > 200): Remove empty droplets and dead cells
+Maximum genes per cell (nFeature_RNA < 7000): Remove any doublets or multiplets 
+Mitochondrial percentage (percent.mt < 15%): Remove dead or dying cells
+Ribosomal percentage (percent.rb < 10%): Remove any conatmination
+UMI outlier detection (Mahalanobis distance (p < 0.05)): Remove any outliers
+
+## BATCH CORRECTION 
+Harmony is used here as it can be scaled upto thousands of cells, compatible with Seurat.
+
+## DIMENSIONALITY REDUCTION
+<20 PCs merged distinct populations; >50 PCs introduced spurious subclusters. 35 PCs captured 72.3% of total variance and resolved all canonical cell types.
+
+## CELL TYPE ANNOTATION — CELLTYPIST
+Celltypist is used as it is reference based and scalable upto thousands of cells.
+
+## DIFFERENTIAL EXPRESSION ANALYSIS 
+DKD vs HEALTHY ONLY in order to find therapeutic target for disease conditions.
+
+## DIFFERENTIAL EXPRESSION METHOD
+MAST is used to droput any zeroes. And also for a seamless workflow as it is integrated with Seurat.
+
+## PATHWAY ENRICHMENT
+Reactome is used as it is human specific.
+
+#### AUTHOR
+Pooja S Nelogal
+Mtech Bioinformatics student
